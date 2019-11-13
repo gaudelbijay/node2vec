@@ -67,4 +67,22 @@ class Random_walker():
         
         return walk 
 
+    def _parallel_walk(self,num_walk,walk_length):
+        G = self.G
+        nodes = G.nodes()
+        walks = []
+        for _ in range(num_walk):
+            random.shuffle(nodes)
+            for _n in nodes:
+                walks.append(self.node2vec_walk(walk_length,_n))
+        return walks
+
+    def parallel_walks(self, num_walks, walk_length, workers=1, verbose=0):
+        G = self.G
+        nodes = list(G.nodes())
+        results = Parallel(n_jobs=workers, verbose=verbose, )(
+            delayed(self._parallel_walk)(nodes, num, walk_length) for num in
+            partition_num(num_walks, workers))
+        walks = list(itertools.chain(*results))
+        return walks
 
