@@ -1,11 +1,12 @@
 from walker import RandomWalker
+from gensim.models import Word2Vec
 class Node2Vec:
-    def __init__(self,graph,walk_length,num_walk,p=1.,q=1.,workers=1):
+    def __init__(self,graph,walk_length,num_walks,p=1.,q=1.,workers=1):
         self.graph = graph 
         self._embedding = {}
         self.walker = RandomWalker(graph,p=p,q=q)
         print("Preprocess transition probs...")
-        self.walker.preprocess_transition_probs()
+        self.walker.preprocessing_transition_probs()
         self.sentences = self.walker.parallel_walks(
             num_walks=num_walks, walk_length=walk_length, workers=workers, verbose=1)
 
